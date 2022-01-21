@@ -26,6 +26,19 @@ begin
 
     Ada.Text_IO.Put_Line
        (String'Input (Channel)); -- Prints any message recevied by server
-
+    delay 0.2; 
+    
+    String'Output
+        (Channel, "How are you doing?"); 
+    delay 0.2;
+    
+    Ada.Text_IO.Put_Line
+        (String'Input(Channel)); 
+    delay 0.2; 
+    
+    String'Output 
+        (Channel, "I'm great. Thanks for asking!"); 
+        
+    
     Close_Socket (Client);
 end client;
