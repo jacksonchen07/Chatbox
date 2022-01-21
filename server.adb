@@ -34,6 +34,14 @@ begin
 
         -- Send same message back to associated socket
         String'Output (Channel, "Hello Socket World, Client!");
+        delay 0.2;
+        
+        Ada.Text_IO.Put_Line 
+            (String'Input(Channel)); 
+        delay 0.2;
+           
+        String'Output (Channel, "I'm doing well. How about you?");
+        
     end;
 
     Close_Socket (Server);
