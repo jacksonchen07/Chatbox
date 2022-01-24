@@ -8,7 +8,7 @@ procedure client is
     Client  : Socket_Type;
     Address : Sock_Addr_Type;
     Channel : Stream_Access;
-    User_Input : String(1..1) := (others => ' ');-- takes input for the string 
+    User_Input : Integer;-- takes input for the string 
 begin
     Ada.Text_IO.Put_Line ("Pease enter a number 1-5");
     Get(User_Input);
@@ -35,7 +35,7 @@ begin
 
     
     If  User_Input = 1 then -- added if loop to check for valid input
-    String'Output
+    Integer'Output
        (Channel, User_input); -- Sends message to stream (Modifed this so it sends user Input)
     delay 0.2;
 
