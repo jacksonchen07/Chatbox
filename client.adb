@@ -10,7 +10,8 @@ procedure client is
     Channel : Stream_Access;
     User_Input : String(1..2) := (others => ' ');-- takes input for the string 
 begin
-
+    Ada.Text_IO.Put_Line ("Pease enter a number 1-5");
+    Get(User_Input);
 
     Initialize; -- Must be called before socket routine
     Address.Addr := Addresses (Get_Host_By_Name (Host_Name), 1);
@@ -31,8 +32,7 @@ begin
     Channel := Stream (Client); -- Stream associated to the socket
     
     
-    Ada.Text_IO.Put_Line ("Pease enter a number 1-5");
-    Get(User_Input);
+
     
     If  User_Input = 1 then -- added if loop to check for valid input
     String'Output
