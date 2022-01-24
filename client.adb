@@ -8,8 +8,11 @@ procedure client is
     Client  : Socket_Type;
     Address : Sock_Addr_Type;
     Channel : Stream_Access;
-    Input : Integer; -- takes input for the string 
+    Input : string; -- takes input for the string 
 begin
+    Put_Line ("Pease enter a number 1-5");
+    Get(Input);
+
     Initialize; -- Must be called before socket routine
     Address.Addr := Addresses (Get_Host_By_Name (Host_Name), 1);
     Address.Port := 1_024;
@@ -17,8 +20,7 @@ begin
     
     
     
-    Put_Line ("Pease enter a number 1-5");
-    Get(Input);
+
 
     delay 0.2;
 
@@ -26,7 +28,7 @@ begin
        (Client,
         Address); -- Connect and Autmoatically bind to an address since localhost is the server
     Channel := Stream (Client); -- Stream associated to the socket
-    If Input = 1 then -- added if loop to check for valid input
+    If Input = '1' then -- added if loop to check for valid input
     String'Output
        (Channel, Input); -- Sends message to stream (Modifed this so it sends user Input)
     delay 0.2;
@@ -34,7 +36,7 @@ begin
     Ada.Text_IO.Put_Line
        (String'Input (Channel)); 
     
-    elsif Input = 2 then
+    elsif Input = '2' then
     String'Output
        (Channel, Input); 
     delay 0.2;
@@ -42,7 +44,7 @@ begin
     Ada.Text_IO.Put_Line
        (String'Input (Channel)); 
      
-    elsif Input = 3 then
+    elsif Input = '3' then
     String'Output
        (Channel, Input); 
     delay 0.2;
@@ -51,7 +53,7 @@ begin
        (String'Input (Channel)); 
 
 
-    elsif Input = 4
+    elsif Input = '4'
     then
     String'Output
        (Channel, Input); 
@@ -60,7 +62,7 @@ begin
     Ada.Text_IO.Put_Line
        (String'Input (Channel)); 
        
-           elsif Input = 5 then
+           elsif Input = '5' then
     String'Output
        (Channel, Input); 
     delay 0.2;
