@@ -1,17 +1,16 @@
--- Examples and useage of sockets in Ada https://en.wikibooks.org/wiki/Ada_Programming/Libraries/GNAT.Sockets
--- https://rosettacode.org/wiki/Sockets#Ada
-
 with GNAT.Sockets; use GNAT.Sockets;
-with Ada.Text_IO;
+with Ada.Text_IO; 
+With Ada.Integer_Text_IO; -- added for integer usage
 
 procedure client is
+   User_Input : Integer;-- takes input for the string 
     Client  : Socket_Type;
     Address : Sock_Addr_Type;
     Channel : Stream_Access;
-    User_Input : Integer;-- takes input for the string 
+ 
 begin
     Ada.Text_IO.Put_Line ("Pease enter a number 1-5");
-    Get(User_Input);
+    Ada.Integer_Text_IO.get(User_Input);
 
     Initialize; -- Must be called before socket routine
     Address.Addr := Addresses (Get_Host_By_Name (Host_Name), 1);
@@ -35,7 +34,7 @@ begin
 
     
     If  User_Input = 1 then -- added if loop to check for valid input
-    Integer'Output
+    Integer'Output -- changed to allow the sending of integers 
        (Channel, User_input); -- Sends message to stream (Modifed this so it sends user Input)
     delay 0.2;
 
@@ -43,7 +42,7 @@ begin
        (String'Input (Channel)); 
     
     elsif  User_Input = 2 then
-    String'Output
+    Integer'Output 
        (Channel, User_Input); 
     delay 0.2;
 
@@ -51,7 +50,7 @@ begin
        (String'Input (Channel)); 
      
     elsif  User_Input = 3 then
-    String'Output
+    Integer'Output 
        (Channel, User_Input); 
     delay 0.2;
 
@@ -61,15 +60,15 @@ begin
 
     elsif  User_Input = 4
     then
-    String'Output
+    Integer'Output 
        (Channel, User_Input); 
     delay 0.2;
 
     Ada.Text_IO.Put_Line
        (String'Input (Channel)); 
        
-           elsif Input = 5 then
-    String'Output
+           elsif User_Input = 5 then
+    Integer'Output
        (Channel, User_Input); 
     delay 0.2;
 
@@ -78,6 +77,9 @@ begin
   else
   Ada.Text_IO.Put_Line  ("Error invalid Input"); -- invalid input error
   end if;
+  
+    Close_Socket (Client);
+end client;
   
     Close_Socket (Client);
 end client;
