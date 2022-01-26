@@ -3,6 +3,7 @@
 
 with GNAT.Sockets; use GNAT.Sockets;
 with Ada.Text_IO;
+with Ada.Integer_Text_IO;
 
 procedure client is
     Client  : Socket_Type;
@@ -20,12 +21,20 @@ begin
        (Client,
         Address); -- Connect and Autmoatically bind to an address since localhost is the server
     Channel := Stream (Client); -- Stream associated to the socket
-    String'Output
-       (Channel, "Hello Socket World, Server!"); -- Sends message to stream
-    delay 0.2;
 
-    Ada.Text_IO.Put_Line
-       (String'Input (Channel)); -- Prints any message recevied by server
+    while True loop
+        declare
+            User_Input : String := Ada.Text_IO.Get_Line;
+        begin
+            Ada.Text_IO.Put_Line ("Enter a message: ");
+            String'Output (Channel, User_Input); -- Sends message to stream
+        end;
+        delay 0.2;
+        Ada.Text_IO.Put_Line
+           (String'Input (Channel)); -- Prints any message recevied by server
+    end loop;
 
+    Ada.Text_IO.Put_Line ("Closing Socket...");
     Close_Socket (Client);
+    Finalize;
 end client;
