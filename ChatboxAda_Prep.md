@@ -2,12 +2,15 @@ ChatBox Ada
 Purpose: Connect terminals to chat with each other.
 
 Need:
-- A server
-- Multiple clients
-- Store chat history(?) through a hashmap (not secure but OK for starting)
-- Maybe not a log in system, but just a username upon connecting
+- Implement server that is always listening
+- Multiple clients (Concurrency)
+- Add ability to send usernames from client, and store them on the server to be retrieved. (flat file possibly?)
 - Communication System
 - Login System
+- Profanity Filter (Ben)
+    - Write function that takes a string, and returns a obfuscated representation of that string if it contains profanity.
+- Store chat history in log. 
+
 
 Features:
 - Create unique username
@@ -30,7 +33,7 @@ Packages to use:
 
 Ideas that are implemented:
 - Sockets
-- Concurrency (Threads)
+
 
 Process
 1. Create a socket for the server to recieve and send (Get an IP address, Port, etc..)

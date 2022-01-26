@@ -3,7 +3,7 @@ with GNAT.Sockets; use GNAT.Sockets;
 with Ada.Text_IO;
 with Ada.Exceptions; use Ada.Exceptions;
 
-procedure server is
+procedure Server is
     Address : Sock_Addr_Type;
     Server  : Socket_Type;
     Socket  : Socket_Type;
@@ -30,7 +30,8 @@ begin
         Message : String :=
            String'Input (Channel); -- Recieves message from associated socket
     begin
-        Ada.Text_IO.Put_Line (Message);
+       
+       Ada.Text_IO.Put_Line (Message);
 
         -- Send same message back to associated socket
         String'Output (Channel, "Hello Socket World, Client!");
@@ -38,4 +39,5 @@ begin
 
     Close_Socket (Server);
     Close_Socket (Socket);
-end server;
+    
+end Server;

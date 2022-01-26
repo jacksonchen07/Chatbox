@@ -1,10 +1,10 @@
-project chat is
-
-   for Main use ("client.adb", "server.adb");
+project Chat is
+   for Source_Dirs use ("source/**");
+   for Main use ("Client.adb", "Server.adb", "Profanity_Filter.adb");
    for Object_Dir use ".objs";
 
    package Compiler is
       for Default_Switches ("Ada") use ("-g");
    end Compiler;
 
-end chat;
+end Chat;
