@@ -25,10 +25,11 @@ begin
     while True loop
         declare
             User_Input : String := Ada.Text_IO.Get_Line;
+            -- Message : String := "Hello";
         begin
-            Ada.Text_IO.Put_Line ("Enter a message: ");
             String'Output (Channel, User_Input); -- Sends message to stream
         end;
+
         delay 0.2;
         Ada.Text_IO.Put_Line
            (String'Input (Channel)); -- Prints any message recevied by server
