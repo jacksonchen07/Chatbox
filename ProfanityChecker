@@ -1,0 +1,64 @@
+With Ada.Text_IO;   
+With Ada.Integer_Text_IO; Use Ada.Integer_Text_IO;
+with Ada.Strings;
+with Ada.Strings.Unbounded;
+with Ada.Strings.Fixed;
+with ada.Text_IO.Unbounded_IO;
+
+procedure filter is
+ User_Input : Ada.Strings.Unbounded.Unbounded_String := ada.Text_IO.Unbounded_IO.Get_Line;
+   input_array : array (1..7) of Ada.Strings.Unbounded.Unbounded_String;
+   Ok :Boolean; 
+   Placeholder : Ada.Strings.Unbounded.Unbounded_String;
+   Checker : Integer;
+  Output : Ada.Strings.Unbounded.Unbounded_String;
+  Spacer : Integer;
+begin
+    checker := 1 ;
+ 
+    input_array(1) := Ada.Strings.Unbounded.To_Unbounded_String ("fuck") ;
+    input_array(2) := Ada.Strings.Unbounded.To_Unbounded_String ("shit");
+    input_array(3) := Ada.Strings.Unbounded.To_Unbounded_String ("FUCK");
+    input_array(4) := Ada.Strings.Unbounded.To_Unbounded_String ("SHIT");
+    input_array(5) := Ada.Strings.Unbounded.To_Unbounded_String ("Fuck");
+    input_array(6) := Ada.Strings.Unbounded.To_Unbounded_String ("Shit");
+    input_array(7) := Ada.Strings.Unbounded.To_Unbounded_String ("Asshole");
+    Output := User_Input;
+    for I in 1 .. 7 loop
+    Placeholder := input_array(I);
+
+    
+
+    Ok := Ada.Strings.Fixed.Index(Ada.Strings.Unbounded.To_String(Output),  Ada.Strings.Unbounded.To_String (Placeholder)) > 0;
+    if Ok = true then  
+    checker := Checker + 1; -- keeps track of the number of bad words
+    else
+    checker := Checker + 0;
+    end if;
+   
+    end loop;
+     
+  
+
+    if checker > 1 then  
+    while checker > 1 loop  -- if there are bad words
+    for A in 1 .. 7 loop
+     Placeholder := input_array(A);
+     Spacer :=  Ada.Strings.Fixed.Index(Ada.Strings.Unbounded.To_String(Output),  Ada.Strings.Unbounded.To_String (Placeholder)); -- finds the locatioon where the bad words are
+     
+    Ada.Strings.Unbounded.Overwrite(Output , Spacer , ("!@#$%"));  --- replaces the bad words
+    end loop;
+                       checker := Checker - 1;
+    end loop;
+    else 
+    Checker := Checker + 0;
+    end if;
+  
+    
+
+    
+   
+   ada.Text_IO.Unbounded_IO.put (Output);
+  
+end filter;
+   
