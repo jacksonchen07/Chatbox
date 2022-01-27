@@ -2,7 +2,7 @@
 -- https://rosettacode.org/wiki/Sockets#Ada
 
 with GNAT.Sockets; use GNAT.Sockets;
-with Ada.Text_IO;
+with Ada.Text_IO;  use Ada.Text_IO;
 with Ada.Integer_Text_IO;
 
 procedure client is
@@ -17,25 +17,28 @@ begin
 
     delay 0.2;
 
-    Connect_Socket
-       (Client,
-        Address); -- Connect and Autmoatically bind to an address since localhost is the server
+    -- Connect and Autmoatically bind to an address since localhost is the server
+    Connect_Socket (Client, Address);
+
+    Set (RSet, Client);
+    Set (WSet, Client);
     Channel := Stream (Client); -- Stream associated to the socket
+    Create_Selector (Selector);
 
-    while True loop
-        declare
-            User_Input : String := Ada.Text_IO.Get_Line;
-            -- Message : String := "Hello";
-        begin
-            String'Output (Channel, User_Input); -- Sends message to stream
-        end;
+    loop
+    -- *****@@@@ USE THREADS TO CREATE A TASK FOR MESSAGES GOING IN AND TASK FOR MESSAGES GOING OUT*****@@@@@
+    -- declare
+    --     User_Input : String := Get_Line;
+    -- begin
+    --     String'Output (Channel, User_Input); -- Sends message to stream
+    -- end;
 
-        delay 0.2;
-        Ada.Text_IO.Put_Line
-           (String'Input (Channel)); -- Prints any message recevied by server
+    -- delay 0.2;
+    -- -- Prints any message recevied by server
+    -- Put_Line (String'Input (Channel));
     end loop;
 
-    Ada.Text_IO.Put_Line ("Closing Socket...");
-    Close_Socket (Client);
-    Finalize;
+    -- Put_Line ("Closing Socket...");
+    -- Close_Socket (Client);
+    -- Finalize;
 end client;

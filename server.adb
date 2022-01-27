@@ -1,71 +1,87 @@
 with GNAT.Sockets;   use GNAT.Sockets;
-with Ada.Text_IO;
+with Ada.Text_IO;    use Ada.Text_IO;
 with Ada.Exceptions; use Ada.Exceptions;
+with Ada.Containers.Vectors;
+with Ada.Numerics.Discrete_Random;
 
 procedure server is
-    Address   : Sock_Addr_Type;
-    Server    : Socket_Type;
-    Channel   : Stream_Access;
-    Socket    : Socket_Type;
-    Connected : Integer := 0;
+    Address       : Sock_Addr_Type;
+    Server        : Socket_Type;
+    Client_Socket : Socket_Type;
 
-    task type Client_Connect is
-        entry Start (Socket : Socket_Type; Channel : Stream_Access);
-    end Client_Connect;
+    package Client_Vectors is new Ada.Containers.Vectors
+       (Element_Type => Socket_Type, Index_Type => Positive);
+    Clients : Client_Vectors.Vector;
 
-    Task_Array : array (1 .. 10) of Client_Connect;
-
-    task body Client_Connect is
+    procedure Broadcast (Message : String) is
+        Channel : Stream_Access;
     begin
-        accept Start (Socket : Socket_Type; Channel : Stream_Access);
-        Ada.Text_IO.Put_Line ("Connected...");
-        while True loop
+        for Socket of Clients loop
+            Channel := Stream (Socket);
+            String'Output (Channel, Message);
+        end loop;
+    end Broadcast;
+
+    task type Client_Task is
+        entry Start (Socket : Socket_Type);
+    end Client_Task;
+
+    task body Client_Task is
+        Sock    : Socket_Type;
+        Channel : Stream_Access;
+    begin
+        accept Start (Socket : Socket_Type) do
+            Sock := Socket;
+        end Start;
+
+        Put_Line ("Client connected...");
+        Clients.Append (Sock);
+        Channel := Stream (Sock);
+        loop
             declare
-                Message : String :=
-                   String'Input
-                      (Channel); -- Recieves message from associated socket
+                -- Recieves message from associated socket
+                Message : String := String'Input (Channel);
             begin
                 Address := Get_Address (Channel);
-                Ada.Text_IO.Put_Line (Message & " from " & Image (Address));
-                -- Ada.Text_IO.Put_Line (Message);
+                -- Put_Line (Image (Address) & ": " & Message);
+                Broadcast (Image (Address) & ": " & Message);
                 -- Send same message back to associated socket
-                String'Output (Channel, "Message recieved");
+                -- String'Output (Channel, "Message recieved");
+
             end;
         end loop;
-        Ada.Text_IO.Put_Line ("Disconnected...");
-    end Client_Connect;
+    end Client_Task;
+
+    type Client_Access is access Client_Task;
+    Client_Instance : Client_Access;
 
 begin
-    Initialize
-       (Process_Blocking_IO => False); -- Must be called before socket routine
-    Address.Addr := -- Get internet address of host. (Localhost here)
-       Addresses (Get_Host_By_Name (Host_Name), 1);
+    -- Must be called before socket routine
+    Initialize (Process_Blocking_IO => False);
+    -- Get internet address of host. (Localhost here)
+    Address.Addr := Addresses (Get_Host_By_Name (Host_Name), 1);
     Address.Port := 1_024;
 
-    Create_Socket
-       (Server); -- Socket will need to be associated with an address on server sockets
+    -- Socket will need to be associated with an address on server sockets
+    Create_Socket (Server);
     Set_Socket_Option (Server, Socket_Level, (Reuse_Address, True));
     Bind_Socket (Server, Address); -- Bind Socket
+    Listen_Socket (Server); -- Start listening for any incoming sockets
 
-    while True loop
-        Ada.Text_IO.Put_Line ("Listening for sockets...");
-        Listen_Socket (Server); -- Start listening for any incoming sockets
-        Accept_Socket (Server, Socket, Address); -- Accept any incoming sockets
-        Channel :=
-           Stream (Socket); -- Returns a stream from the incoming socket
+    loop
+        Put_Line ("Accepting new sockets...");
+
+        -- Accept any incoming sockets
+        Accept_Socket (Server, Client_Socket, Address);
         delay 0.2;
-        Connected := Connected + 1;
-        Ada.Text_IO.Put_Line
-           ("There are now" & Integer'Image (Connected) &
-            " clients connected.");
 
         -- Start a thread
-        Task_Array (Connected).Start (Socket, Channel);
-        -- Client_Connect.Start (Socket, Channel);
+        Client_Instance := new Client_Task;
+        Client_Instance.Start (Client_Socket);
     end loop;
 
-    Ada.Text_IO.Put_Line ("Closing Socket...");
-    Close_Socket (Server);
-    Close_Socket (Socket);
-    Finalize;
+    -- Put_Line ("Closing Socket...");
+    -- Close_Socket (Server);
+    -- Close_Socket (Socket);
+    -- Finalize;
 end server;
