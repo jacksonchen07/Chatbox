@@ -2,8 +2,8 @@ ChatBox Ada
 Purpose: Connect terminals to chat with each other.
 
 Need:
-- A server
-- Multiple clients
+- A server == COMPLETED?
+- Multiple clients -- COMPLETED
 - Store chat history(?) through a hashmap (not secure but OK for starting)
 - Maybe not a log in system, but just a username upon connecting
 - Communication System
@@ -33,8 +33,8 @@ Ideas that are implemented:
 - Concurrency (Threads)
 
 Process
-1. Create a socket for the server to recieve and send (Get an IP address, Port, etc..)
-2. Have a client create a socket to connect to server to start recieving and sending
+1. Create a socket for the server to recieve and send (Get an IP address, Port, etc..) -- COMPLETED
+2. Have a client create a socket to connect to server to start recieving and sending -- COMPLETED
 3. Once connected, prompt user to create a username and run it thorugh a data structure to see if it is taken or not
 4. Client should be able to type a message and send it to the server to brodcast to other clients
 5. Other clients receive message
