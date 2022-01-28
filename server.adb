@@ -1,10 +1,8 @@
-with GNAT.Sockets;   use GNAT.Sockets;
-with Ada.Text_IO;    use Ada.Text_IO;
-with Ada.Exceptions; use Ada.Exceptions;
+with GNAT.Sockets; use GNAT.Sockets;
+with Ada.Text_IO;  use Ada.Text_IO;
 with Ada.Containers.Vectors;
-with Ada.Numerics.Discrete_Random;
 
-procedure server is
+procedure Server is
     Address       : Sock_Addr_Type;
     Server        : Socket_Type;
     Client_Socket : Socket_Type;
@@ -13,12 +11,14 @@ procedure server is
        (Element_Type => Socket_Type, Index_Type => Positive);
     Clients : Client_Vectors.Vector;
 
-    procedure Broadcast (Message : String) is
+    procedure Broadcast (Sock : Socket_Type; Message : String) is
         Channel : Stream_Access;
     begin
         for Socket of Clients loop
-            Channel := Stream (Socket);
-            String'Output (Channel, Message);
+            if Sock /= Socket then
+                Channel := Stream (Socket);
+                String'Output (Channel, Message);
+            end if;
         end loop;
     end Broadcast;
 
@@ -43,11 +43,7 @@ procedure server is
                 Message : String := String'Input (Channel);
             begin
                 Address := Get_Address (Channel);
-                -- Put_Line (Image (Address) & ": " & Message);
-                Broadcast (Image (Address) & ": " & Message);
-                -- Send same message back to associated socket
-                -- String'Output (Channel, "Message recieved");
-
+                Broadcast (Sock, Image (Address) & ": " & Message);
             end;
         end loop;
     end Client_Task;
@@ -75,7 +71,7 @@ begin
         Accept_Socket (Server, Client_Socket, Address);
         delay 0.2;
 
-        -- Start a thread
+        -- Start a new task for a new client
         Client_Instance := new Client_Task;
         Client_Instance.Start (Client_Socket);
     end loop;
@@ -84,4 +80,4 @@ begin
     -- Close_Socket (Server);
     -- Close_Socket (Socket);
     -- Finalize;
-end server;
+end Server;
