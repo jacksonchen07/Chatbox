@@ -13,7 +13,7 @@ with Ada.Characters.Latin_1; use Ada.Characters.Latin_1;
 procedure Client is
     Client  : Socket_Type;
     Address : Sock_Addr_Type;
-    Key     : Character;
+    -- Key     : Character;
 
     -- Recieving msg task --
     task Rec_Msg is
@@ -57,27 +57,27 @@ procedure Client is
             declare
                 User_Input : String := Get_Line;
             begin
-                exit when End_Of_File;
+                -- exit when End_Of_File;
                 String'Output (Channel, User_Input); -- Sends message to stream
             end;
         end loop;
     end Send_Msg;
 
-    -- Detecting if user exited group chat --
-    task Check_End;
+    -- -- Detecting if user exited group chat --
+    -- task Check_End;
 
-    task body Check_End is
-    begin
-        loop
-            Get_Immediate (Key);
-            if Key = ESC then
-                Put_Line ("Closing Socket...");
-                Close_Socket (Client);
-                Finalize;
-                exit;
-            end if;
-        end loop;
-    end Check_End;
+    -- task body Check_End is
+    -- begin
+    --     loop
+    --         Get_Immediate (Key);
+    --         if Key = ESC then
+    --             Put_Line ("Closing Socket...");
+    --             Close_Socket (Client);
+    --             Finalize;
+    --             exit;
+    --         end if;
+    --     end loop;
+    -- end Check_End;
 
 begin
     Initialize; -- Must be called before socket routine
