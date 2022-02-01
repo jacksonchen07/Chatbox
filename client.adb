@@ -1,10 +1,4 @@
--- Examples and useage of sockets in Ada https://en.wikibooks.org/wiki/Ada_Programming/Libraries/GNAT.Sockets
--- https://rosettacode.org/wiki/Sockets#Ada
-
--- Implementations in the future:
--- Exception handling
--- Enter username
-
+with Ada.Strings;
 with GNAT.Sockets;           use GNAT.Sockets;
 with Ada.Text_IO;            use Ada.Text_IO;
 with Ada.Integer_Text_IO;
@@ -78,8 +72,8 @@ procedure Client is
     --         end if;
     --     end loop;
     -- end Check_End;
-
 begin
+
     Initialize; -- Must be called before socket routine
     Address.Addr := Addresses (Get_Host_By_Name (Host_Name), 1);
     Address.Port := 1_024;
