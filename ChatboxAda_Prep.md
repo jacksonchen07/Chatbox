@@ -6,7 +6,7 @@ Need:
 - Multiple clients == COMPLETED
 - Store chat history(?) through a hashmap (not secure but OK for starting)
 - Maybe not a log in system, but just a username upon connecting
-- Communication System
+- Communication System 
 - Login System
 
 Features:
