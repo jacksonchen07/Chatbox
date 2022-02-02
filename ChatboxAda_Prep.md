@@ -37,5 +37,5 @@ Process
 2. Have a client create a socket to connect to server to start recieving and sending == COMPLETED
 3. Once connected, prompt user to create a username and run it thorugh a data structure to see if it is taken or not
 4. Client should be able to type a message and send it to the server to brodcast to other clients == COMPLETED 
-5. Other clients receive message
+5. Other clients receive message = COMPLETED 
 6. When client disconnects remove from list of connected sockets and leave a message.
