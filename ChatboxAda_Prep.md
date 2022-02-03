@@ -16,6 +16,12 @@ Features:
 
 Possible:
 - Multiple chat rooms(?)
+- Friends List
+- Ignore/Block List
+- Possible Admin clients?
+- Possible report Function?
+- Emoji Translator (Typing =) will be turned into *Smile* ).
+- Private Messaghe chat?
 
 Packages to use:
 - GNAT.Sockets for sockets: 
