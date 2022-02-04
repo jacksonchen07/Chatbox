@@ -3,8 +3,7 @@ with GNAT.Sockets;           use GNAT.Sockets;
 with Ada.Text_IO;            use Ada.Text_IO;
 with Ada.Integer_Text_IO;
 with Ada.Characters.Latin_1; use Ada.Characters.Latin_1;
-with Ada.Calendar;            use Ada.Calendar;
-with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
+
 
 procedure Client is
     Client  : Socket_Type;
@@ -52,10 +51,10 @@ procedure Client is
         loop
             declare
                 User_Input : String := Get_Line;
-                Time_of_Message : Time := Clock; -- gets current time
+            
             begin
                 -- exit when End_Of_File;
-                String'Output (Channel, User_Input & (" ") & Image (Time_of_Message)); -- Sends message to stream (Modified to display current time)
+                String'Output (Channel, User_Input); -- Sends message to stream (Modified to display current time)
             end;
         end loop;
     end Send_Msg;
