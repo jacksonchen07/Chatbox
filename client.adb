@@ -52,16 +52,12 @@ procedure Client is
 
         loop
             declare
-                User_Input      : String := Get_Line;
-                Time_of_Message : Time   := Clock; -- gets current time
+
+                User_Input : String := Get_Line;
+            
             begin
                 -- exit when End_Of_File;
-                Put_Line ("message sent");
-                String'Output
-                   (Channel,
-                    User_Input & (" ") &
-                    Image
-                       (Time_of_Message)); -- Sends message to stream (Modified to display current time)
+                String'Output (Channel, User_Input); -- Sends message to stream (Modified to display current time)
             end;
         end loop;
     end Send_Msg;
