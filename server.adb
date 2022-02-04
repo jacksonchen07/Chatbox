@@ -1,9 +1,9 @@
-with GNAT.Sockets;          use GNAT.Sockets;
-with Ada.Text_IO;           use Ada.Text_IO;
-with Ada.Command_Line;      use Ada.Command_Line;
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+with GNAT.Sockets;            use GNAT.Sockets;
+with Ada.Text_IO;             use Ada.Text_IO;
+with Ada.Command_Line;        use Ada.Command_Line;
+with Ada.Strings.Unbounded;   use Ada.Strings.Unbounded;
 with Ada.Containers.Vectors;
-With ada.Integer_Text_IO; Use ada.Integer_Text_IO;
+with Ada.Integer_Text_IO;     use Ada.Integer_Text_IO;
 with Ada.Calendar;            use Ada.Calendar;
 with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
 
@@ -21,35 +21,27 @@ procedure Server is
     Client_Usernames : Username_Vectors.Vector;
 
     procedure Broadcast (Sock : Socket_Type; Message : String) is
-        Channel : Stream_Access;
-        Time_of_Message : Time := Clock; -- gets current time
+        Channel         : Stream_Access;
+        Now             : Time := Clock; -- gets current time
         Current_Year    : Year_Number;
         Current_Month   : Month_Number;
         Current_Day     : Day_Number;
         Current_Seconds : Day_Duration;
-        Hours: Integer;
-        Minutes: integer;
-        Seconds: Integer;
-
-
-
+        Hour            : Hour_Number;
+        Minute          : Minute_Number;
+        Second          : Second_Number;
+        Sub_Second      : Second_Duration;
     begin
-       Split (Time_of_Message,
-          Current_Year,
-          Current_Month,
-          Current_Day,
-          Current_Seconds);
-
-        Seconds := Integer(Current_Seconds);
-        Minutes := Seconds  / 60;
-         Hours := Minutes / 60;
-         Minutes := Minutes - (Hours * 60);
-
+        Split (Now, Current_Year, Current_Month, Current_Day, Current_Seconds);
+        Split (Current_Seconds, Hour, Minute, Second, Sub_Second);
 
         for Socket of Clients loop
             if Sock /= Socket then
                 Channel := Stream (Socket);
-                String'Output (Channel, Integer'Image(Hours) & (":")  & Integer'Image(Minutes) & (" ") & Message);
+                String'Output
+                   (Channel,
+                    "[" & Integer'Image (Hour) (2 .. 3) & (":") &
+                    Integer'Image (Minute) (2 .. 3) & "]" & (" ") & Message);
             end if;
         end loop;
     end Broadcast;
@@ -73,9 +65,7 @@ procedure Server is
 
         -- Add client's username to another vector
         Username := To_Unbounded_String (Source => String'Input (Channel));
-        -- String'Output (Channel, To_String (Ubsername));
         Client_Usernames.Append (Username);
-
         Put_Line ("Username stored");
 
         loop
@@ -85,10 +75,7 @@ procedure Server is
             begin
                 Put_Line ("Recieved message");
                 Address := Get_Address (Channel);
-                Broadcast
-                   (Sock,
-                    Image (Address) & " " & To_String (Username) & ": " &
-                    Message);
+                Broadcast (Sock, To_String (Username) & ": " & Message);
             end;
         end loop;
     end Client_Task;

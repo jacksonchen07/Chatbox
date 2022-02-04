@@ -54,10 +54,12 @@ procedure Client is
             declare
 
                 User_Input : String := Get_Line;
-            
+
             begin
                 -- exit when End_Of_File;
-                String'Output (Channel, User_Input); -- Sends message to stream (Modified to display current time)
+                String'Output
+                   (Channel,
+                    User_Input); -- Sends message to stream (Modified to display current time)
             end;
         end loop;
     end Send_Msg;
