@@ -16,6 +16,10 @@ procedure Server is
        (Element_Type => Socket_Type, Index_Type => Positive);
     Clients : Client_Vectors.Vector;
 
+    package Username_Vectors is new Ada.Containers.Vectors
+       (Element_Type => Unbounded_String, Index_Type => Positive);
+    Client_Usernames : Username_Vectors.Vector;
+
     procedure Broadcast (Sock : Socket_Type; Message : String) is
         Channel : Stream_Access;
         Time_of_Message : Time := Clock; -- gets current time
@@ -55,8 +59,9 @@ procedure Server is
     end Client_Task;
 
     task body Client_Task is
-        Sock    : Socket_Type;
-        Channel : Stream_Access;
+        Sock     : Socket_Type;
+        Channel  : Stream_Access;
+        Username : Unbounded_String;
     begin
         accept Start (Socket : Socket_Type) do
             Sock := Socket;
@@ -65,13 +70,25 @@ procedure Server is
         Put_Line ("Client connected...");
         Clients.Append (Sock);
         Channel := Stream (Sock);
+
+        -- Add client's username to another vector
+        Username := To_Unbounded_String (Source => String'Input (Channel));
+        -- String'Output (Channel, To_String (Ubsername));
+        Client_Usernames.Append (Username);
+
+        Put_Line ("Username stored");
+
         loop
             declare
                 -- Recieves message from associated socket
                 Message : String := String'Input (Channel);
             begin
+                Put_Line ("Recieved message");
                 Address := Get_Address (Channel);
-                Broadcast (Sock, Image (Address) & ": " & Message);
+                Broadcast
+                   (Sock,
+                    Image (Address) & " " & To_String (Username) & ": " &
+                    Message);
             end;
         end loop;
     end Client_Task;
