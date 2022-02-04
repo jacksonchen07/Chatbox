@@ -9,7 +9,7 @@ procedure client is
    Channel    : Stream_Access;
 
 begin
-   Ada.Text_IO.Get (User_Input);
+   -- Ada.Text_IO.Get (User_Input);
 
    Initialize; -- Must be called before socket routine
    Address.Addr := Addresses (Get_Host_By_Name (Host_Name), 1);
@@ -22,11 +22,17 @@ begin
      (Client,
       Address); -- Connect and Autmoatically bind to an address since localhost is the server
    Channel := Stream (Client); -- Stream associated to the socket
-   String'Output (Channel, User_Input); -- Sends message to stream
-   delay 0.2;
+   loop
+      Ada.Text_IO.Put_Line
+      (String'Input (Channel)); -- Prints any message recevied by server
 
-   Ada.Text_IO.Put_Line
-     (String'Input (Channel)); -- Prints any message recevied by server
+      Ada.Text_IO.Get (User_Input);
+      String'Output (Channel, User_Input); -- Sends message to stream
+      delay 0.2;
 
-   Close_Socket (Client);
+      -- Ada.Text_IO.Put_Line
+      -- (String'Input (Channel)); -- Prints any message recevied by server
+   end loop;
+
+   -- Close_Socket (Client);
 end client;

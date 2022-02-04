@@ -16,7 +16,6 @@ procedure server is
     use Rand_Int;
     gen : Generator;
     num : Integer;
-    ans : String (1 .. 256);
 
 begin
     Initialize
@@ -36,36 +35,40 @@ begin
 
     delay 0.2;
 
-    declare
-        Message : String :=
-           String'Input (Channel); -- Recieves message from associated socket
-    begin
-        Ada.Text_IO.Put_Line (Message);
+    -- declare
+    --     -- Recieves message from associated socket
+    --     Message : String := String'Input (Channel);
+    -- begin
+    --     -- Ada.Text_IO.Put_Line (Message);
 
-        -- Send same message back to associated socket
-        String'Output (Channel, "Hello Socket World, Client!");
+    --     -- Send same message back to associated socket
+    --     -- String'Output (Channel, "Hello Socket World, Client!");
 
-        while Message /= "stop" loop
-            String'Output (Channel, "Ask me a Y/N question or type stop");
+    --     -- Close_Socket (Server);
+    --     -- Close_Socket (Socket);
+    -- end;
 
-            Ada.Text_IO.Put_Line (String'Input (Channel));
-
+    loop
+        String'Output (Channel, "Ask me a Y/N question or type stop");
+        -- Ada.Text_IO.Put_Line (String'Input (Channel));
+        declare
+            -- Recieves message from associated socket
+            Message : String := String'Input (Channel);
+        begin
             Reset (gen);
             num := Random (gen);
 
             if num = 1 then
-                ans := "Yes";
+                String'Output (Channel, "Yes");
             else
-                ans := "No";
+                String'Output (Channel, "No");
             end if;
+        
+        Ada.Text_IO.Put_Line (Message);
+        end;
 
-            String'Output (Channel, ans);
-            delay 0.2;
+        delay 0.2;
 
-        end loop;
-
-        Close_Socket (Server);
-        Close_Socket (Socket);
-    end;
+    end loop;
 
 end server;

@@ -2,7 +2,7 @@
 b__client.o
 [PROJECT FILES]
 /Users/jacksonchen/Desktop/AdaProjects/ChatBox/Chatbox/chat.gpr
-20220126164226 c38b26acc56470ef5f775dfd16f60922
+20220204151436 c38b26acc56470ef5f775dfd16f60922
 [BOUND OBJECT FILES]
 /Users/jacksonchen/Desktop/AdaProjects/ChatBox/Chatbox/.objs/client.o
 [GENERATED SOURCE FILES]
@@ -14,5 +14,4 @@ b__client.ali
 -L/Users/jacksonchen/Desktop/AdaProjects/ChatBox/Chatbox/.objs/
 -L/opt/gcc-11.1.0/lib/gcc/x86_64-apple-darwin15/11.1.0/adalib/
 -static
-/opt/gcc-11.1.0/lib/gcc/x86_64-apple-darwin15/11.1.0/adalib/libgnarl.a
 /opt/gcc-11.1.0/lib/gcc/x86_64-apple-darwin15/11.1.0/adalib/libgnat.a
