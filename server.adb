@@ -3,11 +3,24 @@ with GNAT.Sockets; use GNAT.Sockets;
 with Ada.Text_IO;
 with Ada.Exceptions; use Ada.Exceptions;
 
+with ada.numerics.Discrete_Random;
+
+
+
 procedure server is
     Address : Sock_Addr_Type;
     Server  : Socket_Type;
     Socket  : Socket_Type;
     Channel : Stream_Access;
+
+    
+    subtype randRange is Integer range 1..2;
+    package Rand_Int is new ada.numerics.discrete_random(randRange);
+    use Rand_Int;
+    gen : Generator;
+    num : Integer;
+    ans : String (1..256);
+   
 begin
     Initialize
        (Process_Blocking_IO => False); -- Must be called before socket routine
@@ -34,8 +47,28 @@ begin
 
         -- Send same message back to associated socket
         String'Output (Channel, "Hello Socket World, Client!");
-    end;
+
+    while Message /= "stop" loop 
+	    String'Output(Channel, "Ask me a Y/N question or type stop");
+	
+	    Ada.Text_IO.Put_Line(String'Input (Channel)); 
+
+	    reset(gen);
+   	    num := Random(gen); 
+	
+	    if num = 1 then
+		    ans := "Yes";
+	    else
+		    ans := "No"; 
+ 	    end if; 
+
+	    String'Output (Channel, ans);
+        delay 0.2; 
+		 
+    end loop; 
 
     Close_Socket (Server);
     Close_Socket (Socket);
+    end;
+
 end server;
