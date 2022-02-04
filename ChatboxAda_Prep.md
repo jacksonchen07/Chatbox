@@ -8,6 +8,7 @@ Need:
 - Maybe not a log in system, but just a username upon connecting
 - Communication System 
 - Login System
+- Add ability to take a command line argument for the server.exe that will change the default port it is listening on == COMPLETED
 
 Features:
 - Create unique username

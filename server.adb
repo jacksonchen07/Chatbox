@@ -1,5 +1,7 @@
-with GNAT.Sockets; use GNAT.Sockets;
-with Ada.Text_IO;  use Ada.Text_IO;
+with GNAT.Sockets;          use GNAT.Sockets;
+with Ada.Text_IO;           use Ada.Text_IO;
+with Ada.Command_Line;      use Ada.Command_Line;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Containers.Vectors;
 
 procedure Server is
@@ -52,29 +54,39 @@ procedure Server is
     Client_Instance : Client_Access;
 
 begin
-    -- Must be called before socket routine
-    Initialize (Process_Blocking_IO => False);
-    -- Get internet address of host. (Localhost here)
-    Address.Addr := Addresses (Get_Host_By_Name (Host_Name), 1);
-    Address.Port := 1_024;
+    -- Get port from user
+    if Argument_Count = 0 then
+        Put_Line (Current_Error, "Error - No port was given.");
+        Set_Exit_Status (Failure);
+    elsif Argument_Count > 1 then
+        Put_Line (Current_Error, "Error - Please only put one argument");
+        Set_Exit_Status (Failure);
+    else
+        -- Must be called before socket routine
+        Initialize (Process_Blocking_IO => False);
 
-    -- Socket will need to be associated with an address on server sockets
-    Create_Socket (Server);
-    Set_Socket_Option (Server, Socket_Level, (Reuse_Address, True));
-    Bind_Socket (Server, Address); -- Bind Socket
-    Listen_Socket (Server); -- Start listening for any incoming sockets
+        -- Get internet address of host. (Localhost here)
+        Address.Addr := Addresses (Get_Host_By_Name (Host_Name), 1);
+        Address.Port := Port_Type (Integer'Value (Argument (1)));
 
-    loop
-        Put_Line ("Accepting new sockets...");
+        -- Socket will need to be associated with an address on server sockets
+        Create_Socket (Server);
+        Set_Socket_Option (Server, Socket_Level, (Reuse_Address, True));
+        Bind_Socket (Server, Address); -- Bind Socket
+        Listen_Socket (Server); -- Start listening for any incoming sockets
 
-        -- Accept any incoming sockets
-        Accept_Socket (Server, Client_Socket, Address);
-        delay 0.2;
+        loop
+            Put_Line ("Accepting new sockets...");
 
-        -- Start a new task for a new client
-        Client_Instance := new Client_Task;
-        Client_Instance.Start (Client_Socket);
-    end loop;
+            -- Accept any incoming sockets
+            Accept_Socket (Server, Client_Socket, Address);
+            delay 0.2;
+
+            -- Start a new task for a new client
+            Client_Instance := new Client_Task;
+            Client_Instance.Start (Client_Socket);
+        end loop;
+    end if;
 
     -- Put_Line ("Closing Socket...");
     -- Close_Socket (Server);
